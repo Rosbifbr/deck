@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LevelUP</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    #bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .deck {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+    }
+    .slide {
+      min-height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+      box-sizing: border-box;
+      color: #fff;
+      font-family: sans-serif;
+    }
+    .signin {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      color: #000;
+      padding: 0.75rem 3rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      z-index: 2;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="bg"></div>
+  <div class="deck">
+    <div class="slide">
+      <h1>Welcome</h1>
+      <p>This is the first slide.</p>
+    </div>
+    <div class="slide">
+      <h1>Features</h1>
+      <p>Here are some awesome features of our product.</p>
+    </div>
+    <div class="slide">
+      <h1>Get Started</h1>
+      <p>Ready to dive in? Let's go!</p>
+    </div>
+  </div>
+  <button class="signin">Sign In</button>
+
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.min.js';
+
+    const container = document.getElementById('bg');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 500);
+    camera.position.set(0, 15, 50);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    const ribbonCount = 4;
+    const ribbons = [];
+    const baseMaterial = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0.0 }, uOffset: { value: 0.0 } },
+      vertexShader: `
+        uniform float uTime;
+        uniform float uOffset;
+        varying float vHeight;
+        void main() {
+          vec3 p = position;
+          float t = uTime + uOffset;
+          p.z += sin(p.x * 0.15 + t + sin(p.y * 0.5 + t * 0.3)) * 3.0;
+          p.z += sin(p.y * 0.1 + t * 1.3 + cos(p.x * 0.3 + t * 0.2)) * 2.0;
+          vHeight = p.z;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying float vHeight;
+        void main() {
+          float h = smoothstep(-4.0, 4.0, vHeight);
+          vec3 col = mix(vec3(0.05, 0.02, 0.1), vec3(0.4, 0.1, 0.7), h);
+          gl_FragColor = vec4(col, 1.0);
+        }
+      `,
+      side: THREE.DoubleSide
+    });
+
+    for (let i = 0; i < ribbonCount; i++) {
+      const geom = new THREE.PlaneGeometry(120, 12, 500, 20);
+      const mat = baseMaterial.clone();
+      mat.uniforms.uOffset.value = Math.random() * Math.PI * 2;
+      const mesh = new THREE.Mesh(geom, mat);
+      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.y = (i / (ribbonCount - 1) - 0.5) * 30;
+      scene.add(mesh);
+      ribbons.push(mesh);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const clock = new THREE.Clock();
+    const speed = 0.3;
+    function animate() {
+      const t = clock.getElapsedTime() * speed;
+      ribbons.forEach(r => r.material.uniforms.uTime.value = t);
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
