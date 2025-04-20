@@ -54,6 +54,83 @@
       z-index: 2;
       cursor: pointer;
     }
+    #signinModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 3;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    #signinModal .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #000; /* Black background */
+      padding: 2rem;
+      border-radius: 1rem;
+      color: #fff; /* Light text color */
+      font-family: sans-serif;
+      max-width: 90vw;
+      width: 400px;
+    }
+    #signinModal h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    #signinModal form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    #signinModal .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    #signinModal label {
+      font-size: 1rem;
+    }
+    #signinModal input {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      background: #000; /* Black background for input fields */
+      color: #fff; /* White text color for input fields */
+    }
+    #signinModal input:focus {
+      outline: 2px solid #800080; /* Purple outline on focus */
+    }
+    #signinModal .form-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+    #signinModal .cancel-btn {
+      background: #555; /* Darker background for cancel button */
+      color: #fff; /* Light text color */
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #signinModal .submit-btn {
+      background: #800080; /* Primary purple color for submit button */
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
     @media only screen and (max-width: 100vh) {
       .slide h1 {
         font-size: xxx-large;
@@ -89,7 +166,31 @@
       <p>Pronto para algo real? Junte-se a nós e descubra o poder da sua autenticidade.</p>
     </div>
   </div>
-  <button class="signin">Entrar Agora</button>
+  <button class="signin" onclick="showModal()">Entrar Agora</button>
+
+  <div id="signinModal">
+    <div class="modal-content">
+      <h2>Pronto construir relações autênticas?</h2>
+      <form>
+        <div class="form-group">
+          <label for="phone">Número de Telefone</label>
+          <input type="tel" id="phone" name="phone" placeholder="+55 11 12345-6789" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirmar Senha</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirme sua senha" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="cancel-btn" onclick="hideModal()">Cancelar</button>
+          <button type="submit" class="submit-btn">Entrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.min.js';
@@ -161,6 +262,26 @@
       requestAnimationFrame(animate);
     }
     animate();
+  </script>
+
+  <script>
+    function showModal() {
+      const modal = document.getElementById('signinModal');
+      modal.style.display = 'block';
+      setTimeout(() => {
+        modal.style.opacity = '1';
+        modal.style.transform = 'translateY(0)';
+      }, 10); // Small delay to ensure the transition occurs
+    }
+
+    function hideModal() {
+      const modal = document.getElementById('signinModal');
+      modal.style.opacity = '0';
+      modal.style.transform = 'translateY(-20px)';
+      setTimeout(() => {
+        modal.style.display = 'none';
+      }, 300); // Match the duration of the transition
+    }
   </script>
 </body>
 </html>
