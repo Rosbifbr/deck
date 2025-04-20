@@ -54,25 +54,42 @@
       z-index: 2;
       cursor: pointer;
     }
+    @media only screen and (max-width: 100vh) {
+      .slide h1 {
+        font-size: xxx-large;
+        text-align: center;
+        max-width: 90vw;
+        margin: 1.0rem 0;
+      }
+      .slide p {
+        font-size: xx-large;
+        text-align: center;
+        max-width: 90vw;
+        margin: 0.5rem 0;
+      }
+      .signin {
+        font-size: xx-large;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="bg"></div>
   <div class="deck">
     <div class="slide">
-      <h1>Welcome</h1>
-      <p>This is the first slide.</p>
+      <h1>Bem-vindo ao LevelUP</h1>
+      <p>Um novo caminho para matches mais autênticos. Sem rodeios, sem besteira. Apenas interações verdadeiras.</p>
     </div>
     <div class="slide">
-      <h1>Features</h1>
-      <p>Here are some awesome features of our product.</p>
+      <h1>Simplicidade e Autenticidade</h1>
+      <p>Eliminamos o superficial. Aqui, você encontra formas diretas e divertidas de criar laços que importam.</p>
     </div>
     <div class="slide">
-      <h1>Get Started</h1>
-      <p>Ready to dive in? Let's go!</p>
+      <h1>Eleve-se</h1>
+      <p>Pronto para algo real? Junte-se a nós e descubra o poder da sua autenticidade.</p>
     </div>
   </div>
-  <button class="signin">Sign In</button>
+  <button class="signin">Entrar Agora</button>
 
   <script type="module">
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.175.0/build/three.module.min.js';
